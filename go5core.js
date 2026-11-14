@@ -306,6 +306,8 @@
       }
     }
     r.vBefore = sgn * v;
+    // 이미 판 전체를 잃는 국면: 어느 수를 두어도 결과가 같다 (더 나빠질 수 없으므로)
+    if (v === -NN) { r.cls = CLS_BEST; r.vAfter = r.vBefore; return; }
     const k = this.lookupKnown(r.pre, r.histPre);
     if (k.kind && k.mv === r.mv) { r.cls = CLS_BEST; r.vAfter = r.vBefore; r.bySolverMove = k.kind === 1; return; }
     if (k.kind && k.mv !== NOMOVE && !r.endsGame) {       // 책의 수와 대칭인 수
