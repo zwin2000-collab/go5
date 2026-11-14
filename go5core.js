@@ -337,7 +337,9 @@
     const v = r.post.stm === 0 ? r.vBefore : -r.vBefore;
     this.addResult(r.post, v, v, NOMOVE);
   };
-  const drawCls = (r) => (r.cls === CLS_UNPROVEN && r.nextKnown) ? CLS_UNPROVEN_NEXT : r.cls;
+  // 둔 쪽이 판 전체(25집)를 잃는 수: 어떻게 두어도 다 잃는 국면의 "최선"이라도 좋은 수로 보이지 않게 녹색으로 표시한다
+  const losesAll = (r) => r.cls === CLS_BEST && (r.pre.stm === 0 ? r.vAfter : -r.vAfter) === -NN;
+  const drawCls = (r) => (r.cls === CLS_UNPROVEN && r.nextKnown) ? CLS_UNPROVEN_NEXT : losesAll(r) ? CLS_MISTAKE : r.cls;
 
   // ------------------------------------------------------------------------
   // 대국 (수순 기록 + 판정)
@@ -383,7 +385,8 @@
   };
   function describeMove(r) {
     let s = (r.pre.stm === 0 ? '흑 ' : '백 ') + mvName(r.mv) + '\n';
-    if (r.cls === CLS_BEST) s += '증명된 최선의 수 — ' + wonText(r.vBefore);
+    if (losesAll(r)) s += '판 전체를 잃는 수 — ' + wonText(r.vAfter) + '\n(이 국면은 어떻게 두어도 다 잃음)';
+    else if (r.cls === CLS_BEST) s += '증명된 최선의 수 — ' + wonText(r.vBefore);
     else if (r.cls === CLS_MISTAKE) s += '값을 잃는 수 — ' + wonText(r.vBefore) + (r.lbOnly ? ' 이상' : '') + ' → ' + wonText(r.vAfter) + (r.afterUpper ? ' 이하' : '');
     else s += '증명되지 않은 수';
     return s;
