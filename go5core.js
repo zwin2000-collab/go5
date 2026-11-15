@@ -372,13 +372,13 @@
     const l = this.last();
     return (l && l.cls !== CLS_UNPROVEN && !l.afterUpper) ? l.vAfter : null;
   };
-  // 미리보기: 빈 점마다 거기에 두었을 때의 판정 (-1 = 둘 수 없음)
+  // 미리보기: 빈 점마다 거기에 두었을 때의 판정 (-1 = 돌이 있는 점, -2 = 빈 점이지만 둘 수 없는 자리)
   Game.prototype.preview = function () {
     const out = [], occ = this.st.own | this.st.opp, prev = this.last();
     for (let p = 0; p < NN; p++) {
       out[p] = -1;
       if (this.over || (occ >> p & 1)) continue;
-      const a = applyMove(this.st, p, this.hist); if (!a) continue;
+      const a = applyMove(this.st, p, this.hist); if (!a) { out[p] = -2; continue; }
       const r = { pre: this.st, histPre: this.hist, mv: p, post: a.st, histPost: a.hist, endsGame: false };
       this.book.classify(r, prev);
       out[p] = drawCls(r);

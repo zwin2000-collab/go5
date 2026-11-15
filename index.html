@@ -53,7 +53,7 @@
     </div>
     <div class="note">
       흑과 백을 모두 직접 둡니다. 책(논문 수순)과 solver가 증명해 둔 결과에 있는 국면만 판정합니다.<br>
-      미리보기에서 점이 없는 빈 점은 증명된 최선의 수입니다. 어떻게 두어도 판 전체를 잃는 국면에서는 모든 수가 녹색입니다.<br>
+      미리보기에서 점이 없는 빈 점은 증명된 최선의 수이고, × 표는 둘 수 없는 자리(자살수, 패, 같은 모양 반복)입니다. 어떻게 두어도 판 전체를 잃는 국면에서는 모든 수가 녹색입니다.<br>
       규칙: 중국식 계가, 덤 없음, 자살수 금지, 같은 판 모양 반복 금지, 2연속 패스로 종국.
       <div id="stat"></div>
     </div>
@@ -122,6 +122,13 @@
     if ($('chkPrev').checked && !game.over) {
       const pv = game.preview();
       for (let p = 0; p < 25; p++) {
+        if (pv[p] === -2) {                      // 착수 금지 (자살수 / 패 / 같은 모양 반복)
+          const x = px(p), y = py(p), d = 11;
+          ctx.beginPath(); ctx.moveTo(x - d, y - d); ctx.lineTo(x + d, y + d); ctx.moveTo(x + d, y - d); ctx.lineTo(x - d, y + d);
+          ctx.lineCap = 'round'; ctx.lineWidth = 6; ctx.strokeStyle = '#fff'; ctx.stroke();
+          ctx.lineWidth = 3.2; ctx.strokeStyle = '#333'; ctx.stroke();
+          continue;
+        }
         if (pv[p] <= G.CLS_BEST) continue;
         ctx.beginPath(); ctx.arc(px(p), py(p), 9, 0, 7); ctx.fillStyle = MARK[pv[p]]; ctx.fill();
         ctx.lineWidth = 1.5; ctx.strokeStyle = '#fff'; ctx.stroke();
