@@ -123,10 +123,9 @@
       const pv = game.preview();
       for (let p = 0; p < 25; p++) {
         if (pv[p] === -2) {                      // 착수 금지 (자살수 / 패 / 같은 모양 반복)
-          const x = px(p), y = py(p), d = 11;
+          const x = px(p), y = py(p), d = 5.5;      // 바둑판 줄과 같은 색, 같은 굵기
           ctx.beginPath(); ctx.moveTo(x - d, y - d); ctx.lineTo(x + d, y + d); ctx.moveTo(x + d, y - d); ctx.lineTo(x - d, y + d);
-          ctx.lineCap = 'round'; ctx.lineWidth = 6; ctx.strokeStyle = '#fff'; ctx.stroke();
-          ctx.lineWidth = 3.2; ctx.strokeStyle = '#333'; ctx.stroke();
+          ctx.lineWidth = 1.6; ctx.strokeStyle = '#3c2814'; ctx.stroke();
           continue;
         }
         if (pv[p] <= G.CLS_BEST) continue;
